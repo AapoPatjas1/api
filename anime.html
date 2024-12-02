@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animehaku</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #850000, #cc0000);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        header {
+            background: #5c0000;
+            color: #fff;
+            padding: 30px;
+            text-align: center;
+            font-size: 2em;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .container {
+            padding: 5px;
+        }
+
+        input, select {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+            font-size: 1em;
+        }
+
+        button {
+            background: #ff0000;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.8), 0 0 20px rgba(255, 0, 0, 0.5);
+            transition: transform 0.2s, box-shadow 0.3s ease;
+        }
+
+        button:hover {
+            box-shadow: 0 0 15px rgba(255, 0, 0, 1), 0 0 25px rgba(255, 0, 0, 0.9);
+            transform: scale(1.05);
+        }
+
+        h2 {
+            margin-top: 40px;
+            font-size: 1.5em;
+        }
+
+        #animeResults, #currentlyAiring {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .anime-card {
+            width: 200px;
+            background: #5c0000;
+            border-radius: 10px;
+            padding: 10px;
+            color: #fff;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.8);
+        }
+
+        .anime-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 1), 0 0 30px rgba(255, 0, 0, 0.8);
+        }
+
+        .anime-card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .anime-card h3 {
+            font-size: 1.1em;
+            margin: 10px 0 5px;
+        }
+
+        footer {
+            background: #5c0000;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Animehaku</h1>
+    </header>
+
+    <div class="container">
+        <!-- Hakupalkki ja lisäasetukset -->
+        <div id="searchSection">
+            <input type="text" id="searchInput" placeholder="Hae animea..." />
+            <button onclick="searchAnime()">Hae</button>
+
+            <div id="filters">
+                <select id="animeType">
+                    <option value="">Anime tyyppi</option>
+                    <option value="tv">TV</option>
+                    <option value="movie">Elokuva</option>
+                    <option value="ova">OVA</option>
+                    <option value="special">Special</option>
+                    <option value="ona">ONA</option>
+                    <option value="music">Music</option>
+                    <option value="cm">CM</option>
+                    <option value="pv">PV</option>
+                    <option value="tv_special">TV Special</option>
+                </select>
+
+                <select id="animeStatus">
+                    <option value="">Status</option>
+                    <option value="airing">Airing</option>
+                    <option value="complete">Complete</option>
+                    <option value="upcoming">Upcoming</option>
+                </select>
+
+                <select id="animeRating">
+                    <option value="">Ikäraja</option>
+                    <option value="g">G</option>
+                    <option value="pg">PG</option>
+                    <option value="pg13">PG-13</option>
+                    <option value="r17">R-17</option>
+                    <option value="r">R</option>
+                    <option value="rx">RX</option>
+                </select>
+
+                <input type="number" id="minScore" placeholder="Minimi Score" min="0" max="10">
+                <input type="number" id="maxScore" placeholder="Maksimi Score" min="0" max="10">
+            </div>
+        </div>
+
+        <div id="animeResults"></div>
+
+        <button onclick="getRandomAnime()">Näytä satunnainen anime</button>
+
+        <h2>Tällä hetkellä julkaisussa olevat animeet:</h2>
+        <div id="currentlyAiring"></div>
+    </div>
+
+  
+
+    <script src="anime.js"></script>
+</body>
+</html>
