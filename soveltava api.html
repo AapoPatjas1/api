@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brawl Stars Player Lookup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1c1c1c;
+            color: white;
+            text-align: center;
+            padding: 50px;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 60%;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px;
+            background-color: #e7a600;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+        }
+        button:hover {
+            background-color: #f0b200;
+        }
+        .player-info {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Brawl Stars Player Lookup</h1>
+    <p>Syötä Brawl Stars -pelitunnus (Player Tag):</p>
+    <input type="text" id="playerTag" placeholder="#PlayerTag" required>
+    <br>
+    <button onclick="getPlayerStats()">Hae pelaajan tiedot</button>
+
+    <div id="result" class="player-info"></div>
+
+    <script src="soveltava api.js"></script>
+</body>
+</html>
