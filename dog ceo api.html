@@ -1,31 +1,22 @@
 <!DOCTYPE html>
-<html lang="fi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Satunnainen Koiran Kuva</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Dog Image Fetcher</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Satunnainen Koiran Kuva</h1>
-
-        <label for="dogBreed">Valitse koiran rotu:</label>
-        <select id="dogBreed">
-            <option value="labrador">Labrador</option>
-            <option value="poodle">Poodle</option>
-            <option value="bulldog">Bulldog</option>
-            <option value="beagle">Beagle</option>
-            <option value="retriever">Retriever</option>
-        </select>
-
-        <button id="getDogImageButton">Näytä satunnainen kuva</button>
-        <div id="dogImageContainer">
-            <img id="dogImage" src="" alt="Koiran kuva" style="display:none;">
-        </div>
-
-    </div>
-
+    <h1>Dog Image Fetcher</h1>
+    <select id="dogBreed">
+        <option value="retriever/golden">Golden Retriever</option>
+        <option value="bulldog/french">French Bulldog</option>
+        <option value="beagle">Beagle</option>
+        <option value="husky">Husky</option>
+        <!-- Lisää tänne lisää rotuja Dog CEO API:n mukaisesti -->
+    </select>
+    <button id="getDogImageButton">Get Dog Image</button>
+    <br><br>
+    <img id="dogImage" style="display:none; max-width: 500px;" alt="Dog Image">
     <script src="dog ceo api.js"></script>
 </body>
 </html>

@@ -1,8 +1,13 @@
-document.getElementById("getDogImageButton").addEventListener("click", function() {
+document.getElementById("getDogImageButton").addEventListener("click", function () {
     const breed = document.getElementById("dogBreed").value;
 
-    fetch(`https://dog.ceo/api/breeds/image/random?breed=${breed}`)
-        .then(response => response.json())
+    fetch(`https://dog.ceo/api/breed/${breed}/images/random`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to fetch dog image");
+            }
+            return response.json();
+        })
         .then(data => {
             const imageUrl = data.message;
             const imgElement = document.getElementById("dogImage");
@@ -10,6 +15,7 @@ document.getElementById("getDogImageButton").addEventListener("click", function(
             imgElement.style.display = "block"; 
         })
         .catch(error => {
-            console.error("Virhe haettaessa kuvaa", error);
+            console.error("Error fetching the dog image:", error);
+            alert("Failed to fetch dog image. Please try again.");
         });
 });
