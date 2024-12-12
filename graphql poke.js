@@ -158,14 +158,6 @@ async function fetchAbilityInfo(abilityName) {
     `;
 }
 
-async function fetchPokemonCry(pokemonId) {
-    const cryUrl = `https://pokemoncries.com/cries/${pokemonId}.mp3`;
-    const audioPlayer = document.getElementById("pokemonCryAudio");
-
-    audioPlayer.src = cryUrl;
-    audioPlayer.load(); 
-}
-
 function getNextPokemon() {
     if (pokemonData) {
         currentPokemonIndex++;
