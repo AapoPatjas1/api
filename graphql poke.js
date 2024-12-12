@@ -2,53 +2,53 @@ let currentPokemonIndex = null;
 let pokemonData = null;
 
 const GET_POKEMON_QUERY = `
-  query getPokemon($name: String!) {
-    pokemon(name: $name) {
-      id
-      name
-      types {
-        type {
-          name
+    query getPokemon($name: String!) {
+        pokemon(name: $name) {
+            id
+            name
+            types {
+                type {
+                    name
+                }
+            }
+            stats {
+                stat {
+                    name
+                }
+                base_stat
+            }
+            height
+            weight
+            sprites {
+                front_default
+                front_shiny
+            }
+            abilities {
+                ability {
+                    name
+                }
+            }
         }
-      }
-      stats {
-        stat {
-          name
-        }
-        base_stat
-      }
-      height
-      weight
-      sprites {
-        front_default
-        front_shiny
-      }
-      abilities {
-        ability {
-          name
-        }
-      }
     }
-  }
 `;
 
 const GET_ABILITY_QUERY = `
-  query getAbility($name: String!) {
-    ability(name: $name) {
-      name
-      effect_entries {
-        effect
-        language {
-          name
+    query getAbility($name: String!) {
+        ability(name: $name) {
+            name
+            effect_entries {
+                effect
+                language {
+                    name
+                }
+            }
+            pokemon {
+                pokemon {
+                    name
+                }
+            }
         }
-      }
-      pokemon {
-        pokemon {
-          name
-        }
-      }
     }
-  }
 `;
 
 async function searchPokemon() {
@@ -64,7 +64,7 @@ async function searchPokemon() {
     if (pokemon) {
         pokemonData = pokemon;
         displayPokemonInfo(pokemon);
-        fetchPokemonCry(pokemon.id); 
+        updateNavigationButtons(pokemon.id);  
     } else {
         alert("Pokémonia ei löytynyt.");
     }
@@ -88,7 +88,6 @@ async function fetchPokemonByName(name) {
     return data.data.pokemon; 
 }
 
-
 async function fetchPokemonByNumber(number) {
     const queryVariables = { name: number.toString() };
 
@@ -106,6 +105,7 @@ async function fetchPokemonByNumber(number) {
     const data = await response.json();
     return data.data.pokemon; 
 }
+
 function displayPokemonInfo(pokemon) {
     currentPokemonIndex = pokemon.id;
 
@@ -158,13 +158,29 @@ async function fetchAbilityInfo(abilityName) {
     `;
 }
 
+function updateNavigationButtons(pokemonId) {
+    const nextPokemonButton = document.getElementById("nextPokemonButton");
+    const previousPokemonButton = document.getElementById("previousPokemonButton");
+
+    
+    fetchPokemonByNumber(pokemonId + 1).then(nextPokemon => {
+        nextPokemonButton.innerText = `Seuraava: ${nextPokemon.name.charAt(0).toUpperCase() + nextPokemon.name.slice(1)}`;
+    }).catch(() => nextPokemonButton.innerText = "Seuraava");
+
+    if (pokemonId > 1) {
+        fetchPokemonByNumber(pokemonId - 1).then(previousPokemon => {
+            previousPokemonButton.innerText = `Edellinen: ${previousPokemon.name.charAt(0).toUpperCase() + previousPokemon.name.slice(1)}`;
+        }).catch(() => previousPokemonButton.innerText = "Edellinen");
+    }
+}
+
 function getNextPokemon() {
     if (pokemonData) {
         currentPokemonIndex++;
         fetchPokemonByNumber(currentPokemonIndex).then(pokemon => {
             pokemonData = pokemon;
             displayPokemonInfo(pokemon);
-            fetchPokemonCry(pokemon.id); 
+            updateNavigationButtons(pokemon.id);  
         });
     }
 }
@@ -175,7 +191,7 @@ function getPreviousPokemon() {
         fetchPokemonByNumber(currentPokemonIndex).then(pokemon => {
             pokemonData = pokemon;
             displayPokemonInfo(pokemon);
-            fetchPokemonCry(pokemon.id); 
+            updateNavigationButtons(pokemon.id);  
         });
     }
 }

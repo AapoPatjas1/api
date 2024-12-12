@@ -5,125 +5,124 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokemon Haku</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            text-align: center;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            width: 200px;
+        }
+
+        button {
+            padding: 10px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .pokemon-info {
+            background-color: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .type {
+            font-weight: bold;
+        }
+
+        .type.fire { color: red; }
+        .type.water { color: blue; }
+        .type.grass { color: green; }
+        .type.electric { color: yellow; }
+        .type.ice { color: lightblue; }
+        .type.fighting { color: #d75e1e; }
+        .type.poison { color: purple; }
+        .type.ground { color: #c2a200; }
+        .type.flying { color: lightgray; }
+        .type.psychic { color: pink; }
+        .type.bug { color: #6b8e23; }
+        .type.rock { color: #d4b798; }
+        .type.ghost { color: #6a5acd; }
+        .type.dragon { color: darkorange; }
+        .type.dark { color: black; }
+        .type.steel { color: silver; }
+        .type.fairy { color: lightpink; }
+
+        .stats {
+            margin: 10px 0;
+        }
+
+        .stats span {
+            margin-right: 10px;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .pokemon-image {
+            width: 150px;
+            height: 150px;
+        }
+
+        .ability-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .ability-list li {
+            cursor: pointer;
+            color: blue;
+        }
+
+        .ability-details {
+            margin-top: 20px;
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .navigation-buttons button {
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            color: #333;
+            cursor: pointer;
+        }
+
+        .navigation-buttons button:hover {
+            background-color: #e2e2e2;
+        }
+    </style>
 </head>
-<style>
-    body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f5f5f5;
-    text-align: center;
-}
-
-header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 15px;
-}
-
-.container {
-    padding: 20px;
-}
-
-input[type="text"] {
-    padding: 10px;
-    margin: 5px;
-    font-size: 16px;
-    width: 200px;
-}
-
-button {
-    padding: 10px;
-    margin: 5px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-
-.pokemon-info {
-    background-color: white;
-    padding: 20px;
-    margin-top: 20px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.type {
-    font-weight: bold;
-}
-
-.type.fire { color: red; }
-.type.water { color: blue; }
-.type.grass { color: green; }
-.type.electric { color: yellow; }
-.type.ice { color: lightblue; }
-.type.fighting { color: #d75e1e; }
-.type.poison { color: purple; }
-.type.ground { color: #c2a200; }
-.type.flying { color: lightgray; }
-.type.psychic { color: pink; }
-.type.bug { color: #6b8e23; }
-.type.rock { color: #d4b798; }
-.type.ghost { color: #6a5acd; }
-.type.dragon { color: darkorange; }
-.type.dark { color: black; }
-.type.steel { color: silver; }
-.type.fairy { color: lightpink; }
-
-.stats {
-    margin: 10px 0;
-}
-
-.stats span {
-    margin-right: 10px;
-}
-
-.image-container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-
-.pokemon-image {
-    width: 150px;
-    height: 150px;
-}
-
-.ability-list {
-    list-style-type: none;
-    padding: 0;
-}
-
-.ability-list li {
-    cursor: pointer;
-    color: blue;
-}
-
-.ability-details {
-    margin-top: 20px;
-    background-color: #f0f0f0;
-    padding: 10px;
-    border-radius: 5px;
-}
-
-.navigation-buttons button {
-    background-color: #f1f1f1;
-    border: 1px solid #ccc;
-    color: #333;
-    cursor: pointer;
-}
-
-.navigation-buttons button:hover {
-    background-color: #e2e2e2;
-}
-
-</style>
 <body>
     <header>
         <h1>Pokemon Haku</h1>
@@ -137,12 +136,9 @@ button:hover {
         <div id="pokemonInfo" class="pokemon-info"></div>
 
         <div class="navigation-buttons">
-            <button onclick="getPreviousPokemon()">Edellinen</button>
-            <button onclick="getNextPokemon()">Seuraava</button>
+            <button id="previousPokemonButton" onclick="getPreviousPokemon()">Edellinen</button>
+            <button id="nextPokemonButton" onclick="getNextPokemon()">Seuraava</button>
         </div>
-
-        
-        
 
         <div id="abilityInfo" class="ability-details"></div>
     </div>
