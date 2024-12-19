@@ -112,12 +112,10 @@
             transform: scale(1.05);
         }
 
-        /* Add a glowing effect to buttons */
         button:active {
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
         }
 
-        /* Fancy button transitions */
         button {
             position: relative;
             overflow: hidden;
@@ -174,15 +172,120 @@
     </div>
 
     <script>
-        let deckId = '';
-        let player1Cards = [];
-        let player2Cards = [];
-        let player1Total = 0;
-        let player2Total = 0;
-        let player1Bust = false;
-        let player2Bust = false;
+        // Blackjack Game Logic
+        const suits = ['♥', '♦', '♣', '♠'];
+        const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
-        // Näyttää valitun pelin ja piilottaa päävalikon
+        let deck = [];
+        let playerHand = [];
+        let dealerHand = [];
+        let playerTotal = 0;
+        let dealerTotal = 0;
+        let isPlayerTurn = false;
+
+        function createDeck() {
+            deck = [];
+            for (let suit of suits) {
+                for (let value of values) {
+                    deck.push({ suit, value });
+                }
+            }
+            deck = shuffleDeck(deck);
+        }
+
+        function shuffleDeck(deck) {
+            for (let i = deck.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [deck[i], deck[j]] = [deck[j], deck[i]];
+            }
+            return deck;
+        }
+
+        function dealCard(hand) {
+            const card = deck.pop();
+            hand.push(card);
+            return card;
+        }
+
+        function cardValue(card) {
+            if (card.value === 'A') return 11;
+            if (['K', 'Q', 'J'].includes(card.value)) return 10;
+            return parseInt(card.value);
+        }
+
+        function calculateTotal(hand) {
+            let total = 0;
+            let aces = 0;
+            for (let card of hand) {
+                total += cardValue(card);
+                if (card.value === 'A') aces++;
+            }
+            while (total > 21 && aces > 0) {
+                total -= 10;
+                aces--;
+            }
+            return total;
+        }
+
+        function updateHands() {
+            document.getElementById('blackjack-output').innerHTML = `
+                Player Hand: ${displayHand(playerHand)} - Total: ${playerTotal}
+                <br>Dealer Hand: ${displayHand(dealerHand, false)} - Total: ${dealerTotal}
+                <br><br>
+                <button onclick="hit()">Hit</button>
+                <button onclick="stand()">Stand</button>
+            `;
+        }
+
+        function displayHand(hand, revealAll = true) {
+            return hand.map((card, index) => {
+                if (!revealAll && index === 0) return '??';
+                return `${card.value}${card.suit}`;
+            }).join(' ');
+        }
+
+        function startBlackjack() {
+            createDeck();
+            playerHand = [dealCard(playerHand), dealCard(playerHand)];
+            dealerHand = [dealCard(dealerHand), dealCard(dealerHand)];
+            playerTotal = calculateTotal(playerHand);
+            dealerTotal = calculateTotal(dealerHand);
+            updateHands();
+            isPlayerTurn = true;
+            document.getElementById("blackjack-output").innerHTML += "<br>Your turn! Hit or Stand.";
+        }
+
+        function hit() {
+            if (!isPlayerTurn) return;
+            const card = dealCard(playerHand);
+            playerTotal = calculateTotal(playerHand);
+            updateHands();
+            if (playerTotal > 21) {
+                document.getElementById("blackjack-output").innerHTML += "<br>You busted! Dealer wins.";
+                isPlayerTurn = false;
+            }
+        }
+
+        function stand() {
+            if (!isPlayerTurn) return;
+            isPlayerTurn = false;
+            while (dealerTotal < 17) {
+                const card = dealCard(dealerHand);
+                dealerTotal = calculateTotal(dealerHand);
+                updateHands();
+            }
+            if (dealerTotal > 21) {
+                document.getElementById("blackjack-output").innerHTML += "<br>Dealer busted! You win!";
+            } else if (playerTotal > dealerTotal) {
+                document.getElementById("blackjack-output").innerHTML += "<br>You win!";
+            } else if (playerTotal < dealerTotal) {
+                document.getElementById("blackjack-output").innerHTML += "<br>Dealer wins!";
+            } else {
+                document.getElementById("blackjack-output").innerHTML += "<br>It's a tie!";
+            }
+        }
+
+        // näyttää valitu peli
         function showGame(game) {
             document.getElementById('menu').style.display = 'none';
             if (game === 'blackjack') {
@@ -192,105 +295,16 @@
             }
         }
 
-        // Palaa takaisin päävalikkoon
+        // menee takas menuu
         function backToMenu() {
             document.getElementById('menu').style.display = 'block';
             document.getElementById('blackjack-container').classList.remove('active');
             document.getElementById('rolldice-container').classList.remove('active');
         }
 
-        // Blackjack Game Logic
-        function startBlackjack() {
-            fetch("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1")
-                .then(response => response.json())
-                .then(data => {
-                    deckId = data.deck_id;
-                    player1Cards = [];
-                    player2Cards = [];
-                    player1Total = 0;
-                    player2Total = 0;
-                    player1Bust = false;
-                    player2Bust = false;
-                    document.getElementById("blackjack-output").innerHTML = 'Deck shuffled. Now draw cards for Player 1 and Player 2.';
-                    drawInitialCards();
-                });
-        }
-
-        function drawInitialCards() {
-            fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=2`)
-                .then(response => response.json())
-                .then(data => {
-                    player1Cards = [data.cards[0]];
-                    player2Cards = [data.cards[1]];
-
-                    player1Total = calculateTotal(player1Cards);
-                    player2Total = calculateTotal(player2Cards);
-
-                    displayCards();
-                });
-        }
-
-        function calculateTotal(cards) {
-            let total = 0;
-            cards.forEach(card => {
-                total += getCardValue(card.value);
-            });
-            return total;
-        }
-
-        function getCardValue(value) {
-            if (['KING', 'QUEEN', 'JACK'].includes(value)) {
-                return 10;
-            }
-            if (value === 'ACE') {
-                return 11;
-            }
-            return parseInt(value);
-        }
-
-        function displayCards() {
-            let player1CardNames = player1Cards.map(card => `${card.value} of ${card.suit}`).join(', ');
-            let player2CardNames = player2Cards.map(card => `${card.value} of ${card.suit}`).join(', ');
-
-            document.getElementById("blackjack-output").innerHTML = `Player 1 drew: ${player1CardNames}. Total: ${player1Total}
-                <br>Player 2 drew: ${player2CardNames}. Total: ${player2Total}
-                <br><br>
-                Player 1, your total: ${player1Total}, Player 2 total: ${player2Total}.<br>
-                <button onclick="drawCard('player1')">Pelaaja 1: Vedä kortti</button>
-                <button onclick="drawCard('player2')">Pelaaja 2: Vedä kortti</button>
-                <br><br>Jatka vuorotellen pelaajien korttien vetämistä.`;
-        }
-
-        function drawCard(player) {
-            fetch(`https://deckofcardsapi.com/api/deck/${deckId}/draw/?count=1`)
-                .then(response => response.json())
-                .then(data => {
-                    let newCard = data.cards[0];
-
-                    if (player === 'player1' && player1Cards.length < 3) {
-                        player1Cards.push(newCard);
-                        player1Total = calculateTotal(player1Cards);
-                    } else if (player === 'player2' && player2Cards.length < 3) {
-                        player2Cards.push(newCard);
-                        player2Total = calculateTotal(player2Cards);
-                    }
-
-                    if (player1Total > 21) {
-                        player1Bust = true;
-                        document.getElementById("blackjack-output").innerHTML += `<br>Pelaaja 1 meni yli 21!`;
-                    }
-                    if (player2Total > 21) {
-                        player2Bust = true;
-                        document.getElementById("blackjack-output").innerHTML += `<br>Pelaaja 2 meni yli 21!`;
-                    }
-
-                    displayCards();
-                });
-        }
-
         // nopan logiikka
         function rollDice(diceNumber) {
-            const result = Math.floor(Math.random() * 6) + 1; // antaa randomilla numeron 1-6
+            const result = Math.floor(Math.random() * 6) + 1;
             if (diceNumber === 1) {
                 document.getElementById("dice1-output").innerHTML = `Noppa 1: ${result}`;
             } else if (diceNumber === 2) {
